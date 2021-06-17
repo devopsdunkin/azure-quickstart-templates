@@ -76,16 +76,15 @@
   },
   "variables": {
     "ubuntuOSVersion": "18.04-LTS",
-    "asetName": "dnsproxy-avail",
-    "nsgName": "dnsproxy-nsg",
-    "vnetName": "dnsproxy-vnet",
-    "vnetAddressPrefix": "10.0.0.0/8",
-    "subNet1Name": "subnet1",
-    "subNet1Prefix": "10.1.0.0/16",
+    "asetName": "us-northcentral-admin-dnsproxy-core-aset",
+    "nsgName": "us-northcentral-admin-dnsproxy-core-nsg",
+    "vnetName": "fastpath-azure-usnc-network",
+    "vnetAddressPrefix": "10.16.0.0/16",
+    "subNet1Name": "us-northcentral-admin-dnsproxy-core-subnet",
+    "subNet1Prefix": "10.16.202.0/24",
     "storType": "Standard_LRS",
     "location": "[parameters('location')]",
     "nicName": "[concat(parameters('vmName'), '-', 'nic')]",
-    "pipName": "[concat(parameters('vmName'), '-', 'pip')]",
     "scriptUrl": "[uri(parameters('_artifactsLocation'), concat('forwarderSetup.sh', parameters('_artifactsLocationSasToken')))]",
     "linuxConfiguration": {
       "disablePasswordAuthentication": true,
@@ -123,63 +122,6 @@
       "properties": {
         "platformFaultDomainCount": 2,
         "platformUpdateDomainCount": 2
-      }
-    },
-    {
-      "type": "Microsoft.Network/networkSecurityGroups",
-      "comments": "An NSG to prevent inbound traffic other than SSH, set sourceAddressPrefix to restrict access further or block all together (or remove the public ip) and ssh in from another vm",
-      "name": "[variables('nsgName')]",
-      "apiVersion": "2020-05-01",
-      "location": "[variables('location')]",
-      "properties": {
-        "securityRules": [
-          {
-            "name": "allow_ssh_in",
-            "properties": {
-              "description": "The only thing allowed is SSH",
-              "protocol": "Tcp",
-              "sourcePortRange": "*",
-              "destinationPortRange": "22",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 100,
-              "direction": "Inbound"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "Microsoft.Network/virtualNetworks",
-      "comments": "An example virtual network, for real scenarios add the DNS forwarder to your own vnet",
-      "name": "[variables('vnetName')]",
-      "apiVersion": "2020-05-01",
-      "location": "[variables('location')]",
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[variables('vnetAddressPrefix')]"
-          ]
-        },
-        "subnets": [
-          {
-            "name": "[variables('subnet1Name')]",
-            "properties": {
-              "addressPrefix": "[variables('subNet1Prefix')]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "Microsoft.Network/publicIPAddresses",
-      "comments": "A public IP to allow us to SSH into the VM, not recommended for production DNS servers",
-      "name": "[variables('pipName')]",
-      "apiVersion": "2020-05-01",
-      "location": "[variables('location')]",
-      "properties": {
-        "publicIPAllocationMethod": "Dynamic"
       }
     },
     {
