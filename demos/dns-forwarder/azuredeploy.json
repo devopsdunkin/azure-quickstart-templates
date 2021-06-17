@@ -80,7 +80,7 @@
     "nsgName": "us-northcentral-admin-dnsproxy-core-nsg",
     "vnetName": "fastpath-azure-usnc-network",
     "vnetAddressPrefix": "10.16.0.0/16",
-    "subNet1Name": "us-northcentral-admin-dnsproxy-core-subnet",
+    "subNet1Name": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), 'us-northcentral-admin-dnsproxy-core-subnet')]",
     "storType": "Standard_LRS",
     "location": "[parameters('location')]",
     "nicName": "[concat(parameters('vmName'), '-', 'nic')]",
@@ -139,7 +139,7 @@
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnet1Name'))]"
+                "id": "[variables('subNet1Name')]"
               }
             }
           }
