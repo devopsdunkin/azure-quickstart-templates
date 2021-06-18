@@ -130,6 +130,9 @@
       "name": "[variables('nicName')]",
       "apiVersion": "2020-05-01",
       "location": "[variables('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/publicIPAddresses/', variables('pipName'))]"
+      ],
       "properties": {
         "networkSecurityGroup": {
           "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgName'))]"
@@ -139,6 +142,9 @@
             "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('pipName'))]"
+              },
               "subnet": {
                 "id": "[variables('subNet1Name')]"
               }
