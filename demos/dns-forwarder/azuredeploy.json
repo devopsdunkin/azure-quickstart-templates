@@ -81,6 +81,7 @@
     "vnetName": "fastpath-azure-usnc-network",
     "vnetAddressPrefix": "10.16.0.0/16",
     "subNet1Name": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), 'us-northcentral-admin-dnsproxy-core-subnet')]",
+    "pipName": "[concat(parameters('vmName'), '-', 'pip')]",
     "storType": "Standard_LRS",
     "location": "[parameters('location')]",
     "nicName": "[concat(parameters('vmName'), '-', 'nic')]",
@@ -144,6 +145,16 @@
             }
           }
         ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "comments": "A public IP to allow us to SSH into the VM, not recommended for production DNS servers",
+      "name": "[variables('pipName')]",
+      "apiVersion": "2020-05-01",
+      "location": "[variables('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic"
       }
     },
     {
